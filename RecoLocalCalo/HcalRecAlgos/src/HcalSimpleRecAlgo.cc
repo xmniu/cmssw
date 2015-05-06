@@ -69,6 +69,15 @@ void HcalSimpleRecAlgo::setpuCorrParams(bool   iPedestalConstraint, bool iTimeCo
 //  psFitOOTpuCorr_->setPulseShapeTemplate(theHcalPulseShapes_.getShape(shapeNum));
 }
 
+void HcalSimpleRecAlgo::setMeth3Params(int iPedSubMethod, double iPedSubThreshold, bool iTimeSlewIsData) { 
+  
+  int iTimeSlewSource =1;
+  if(!iTimeSlewIsData) iTimeSlewSource = 2;
+  
+  pedSubFxn_->init(((PedestalSub::Method)iPedSubMethod), 0, iPedSubThreshold, 0.0);
+  hltOOTpuCorr_->init((HcalTimeSlew::ParaSource)iTimeSlewSource, HcalTimeSlew::Medium, (HcalDeterministicFit::NegStrategy)2, *pedSubFxn_);
+}
+
 void HcalSimpleRecAlgo::setForData (int runnum) { 
    runnum_ = runnum;
    if( puCorrMethod_ ==2 ){
@@ -317,7 +326,7 @@ namespace HcalSimpleRecAlgoImpl {
 		     const HcalTimeSlew::BiasSetting slewFlavor,
                      const int runnum, const bool useLeak,
                      const AbsOOTPileupCorrection* pileupCorrection,
-                     const BunchXParameter* bxInfo, const unsigned lenInfo, const int puCorrMethod, const PulseShapeFitOOTPileupCorrection * psFitOOTpuCorr, HcalDeterministicFit * hltOOTpuCorr, PedestalSub * hltPedSub /* whatever don't know what to do with the pointer...*/)// const on end
+                     const BunchXParameter* bxInfo, const unsigned lenInfo, const int puCorrMethod, const PulseShapeFitOOTPileupCorrection * psFitOOTpuCorr, HcalDeterministicFit * hltOOTpuCorr/*, PedestalSub * hltPedSub*/ /* whatever don't know what to do with the pointer...*/)// const on end
   {
     double fc_ampl =0, ampl =0, uncorr_ampl =0, maxA = -1.e300;
     int nRead = 0, maxI = -1;
@@ -375,8 +384,8 @@ namespace HcalSimpleRecAlgoImpl {
     // Turn on HLT here with puCorrMethod = 3
     if ( puCorrMethod == 3){
       std::vector<double> hltCorrOutput;
-      hltPedSub->init(((PedestalSub::Method)1), 0, 2.7, 0.0);
-      hltOOTpuCorr->init((HcalTimeSlew::ParaSource)2, HcalTimeSlew::Medium, (HcalDeterministicFit::NegStrategy)2, *hltPedSub);
+//       hltPedSub->init(((PedestalSub::Method)1), 0, 2.7, 0.0);
+//       hltOOTpuCorr->init((HcalTimeSlew::ParaSource)2, HcalTimeSlew::Medium, (HcalDeterministicFit::NegStrategy)2, *hltPedSub);
       
       CaloSamples cs;
       coder.adc2fC(digi,cs);
@@ -424,7 +433,7 @@ HBHERecHit HcalSimpleRecAlgo::reconstruct(const HBHEDataFrame& digi, int first, 
 							       HcalTimeSlew::Medium,
                                                                runnum_, setLeakCorrection_,
                                                                hbhePileupCorr_.get(),
-                                                               bunchCrossingInfo_, lenBunchCrossingInfo_, puCorrMethod_, psFitOOTpuCorr_.get(),/*hlt*/hltOOTpuCorr_.get(),pedSubFxn_.get());
+                                                               bunchCrossingInfo_, lenBunchCrossingInfo_, puCorrMethod_, psFitOOTpuCorr_.get(),/*hlt*/hltOOTpuCorr_.get()/*,pedSubFxn_.get()*/);
 }
 
 
@@ -434,7 +443,7 @@ HORecHit HcalSimpleRecAlgo::reconstruct(const HODataFrame& digi, int first, int 
 							   pulseCorr_->get(digi.id(), toadd, phaseNS_),
 							   HcalTimeSlew::Slow,
                                                            runnum_, false, hoPileupCorr_.get(),
-                                                           bunchCrossingInfo_, lenBunchCrossingInfo_, puCorrMethod_, psFitOOTpuCorr_.get(),/*hlt*/hltOOTpuCorr_.get(),pedSubFxn_.get());
+                                                           bunchCrossingInfo_, lenBunchCrossingInfo_, puCorrMethod_, psFitOOTpuCorr_.get(),/*hlt*/hltOOTpuCorr_.get()/*,pedSubFxn_.get()*/);
 }
 
 
@@ -444,7 +453,7 @@ HcalCalibRecHit HcalSimpleRecAlgo::reconstruct(const HcalCalibDataFrame& digi, i
 									 pulseCorr_->get(digi.id(), toadd, phaseNS_),
 									 HcalTimeSlew::Fast,
                                                                          runnum_, false, 0,
-                                                                         bunchCrossingInfo_, lenBunchCrossingInfo_, puCorrMethod_, psFitOOTpuCorr_.get(),/*hlt*/hltOOTpuCorr_.get(),pedSubFxn_.get());
+                                                                         bunchCrossingInfo_, lenBunchCrossingInfo_, puCorrMethod_, psFitOOTpuCorr_.get(),/*hlt*/hltOOTpuCorr_.get()/*,pedSubFxn_.get()*/);
 }
 
 
@@ -454,7 +463,7 @@ HBHERecHit HcalSimpleRecAlgo::reconstructHBHEUpgrade(const HcalUpgradeDataFrame&
                                                                                    pulseCorr_->get(digi.id(), toadd, phaseNS_),
                                                                                    HcalTimeSlew::Medium, 0, false,
                                                                                    hbhePileupCorr_.get(),
-                                                                                   bunchCrossingInfo_, lenBunchCrossingInfo_, puCorrMethod_, psFitOOTpuCorr_.get(),/*hlt*/hltOOTpuCorr_.get(),pedSubFxn_.get());
+                                                                                   bunchCrossingInfo_, lenBunchCrossingInfo_, puCorrMethod_, psFitOOTpuCorr_.get(),/*hlt*/hltOOTpuCorr_.get()/*,pedSubFxn_.get()*/);
   HcalTDCReco tdcReco;
   tdcReco.reconstruct(digi, result);
   return result;

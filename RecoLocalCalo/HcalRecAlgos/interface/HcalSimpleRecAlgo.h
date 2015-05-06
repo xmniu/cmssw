@@ -87,8 +87,11 @@ public:
 		       double iTS4Min, double iTS4Max, double iPulseJitter,double iTimeMean,double iTimeSig,double iPedMean,double iPedSig,
 		       double iNoise,double iTMin,double iTMax,
 		       double its3Chi2,double its4Chi2,double its345Chi2,double iChargeThreshold, int iFitTimes); 
+  
+   void setMeth3Params(int iPedSubMethod, double iPedSubThreshold, bool iTimeSlewIsData);
+//   void 
                
-  std::auto_ptr<PedestalSub> pedSubFxn_= std::auto_ptr<PedestalSub>(new PedestalSub());
+ // std::auto_ptr<PedestalSub> pedSubFxn_= std::auto_ptr<PedestalSub>(new PedestalSub());
   
 private:
   bool correctForTimeslew_;
@@ -112,6 +115,8 @@ private:
   
   // S.Brandt Feb19 : Add a pointer to the HLT algo
   std::auto_ptr<HcalDeterministicFit> hltOOTpuCorr_;
+  std::auto_ptr<PedestalSub> pedSubFxn_;
+  
 };
 
 #endif

@@ -283,6 +283,14 @@ HcalHitReconstructor::HcalHitReconstructor(edm::ParameterSet const& conf):
                           conf.getParameter<int>   ("fitTimes")
 			  );
   }
+  if(puCorrMethod_ == 3) { 
+    reco_.setMeth3Params(
+              conf.getParameter<int>     ("pedestalSubtractionType"),
+              conf.getParameter<double>  ("pedestalUpperLimit"),
+              conf.getParameter<bool>    ("timeSlewForData")
+              );
+  }
+  
 }
 
 HcalHitReconstructor::~HcalHitReconstructor() {
