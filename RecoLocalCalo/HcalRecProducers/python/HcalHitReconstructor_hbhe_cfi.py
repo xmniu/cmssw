@@ -136,7 +136,7 @@ hbheprereco = cms.EDProducer(
     chargeMax             = cms.double(6.),    #Charge cut (fC) for uncstrianed Fit 
     fitTimes              = cms.int32(1),       # -1 means no constraint on number of fits per channel
     # add some of the Method 3 parameters here
-    pedestalSubtractionType = cms.int32(1),
+    pedestalSubtractionType = cms.int32(3),
     pedestalUpperLimit      = cms.double(2.7),
-    timeSlewForData         = cms.bool(True)
+    timeSlewForData         = cms.bool(False)
     )

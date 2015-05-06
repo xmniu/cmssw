@@ -7,7 +7,7 @@
 class PedestalSub
 {
  public:
-  enum Method { DoNothing=0, AvgWithThresh=1, AvgWithoutThresh=2, AvgWithThreshNoPedSub=3, Percentile=4 };
+  enum Method { DoNothing=0, AvgWithThresh=1, AvgWithThresh3=2, AvgWithThresh2=3,AvgWithoutThresh=4, AvgWithThreshNoPedSub=5, Percentile=6 };
 
   PedestalSub();
   ~PedestalSub();

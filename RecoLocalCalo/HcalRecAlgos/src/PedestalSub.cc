@@ -22,7 +22,7 @@ void PedestalSub::calculate(const std::vector<double> & inputCharge, const std::
 
   double bseCorr=PedestalSub::getCorrection(inputCharge, inputPedestal);
   for (auto i=0; i<10; i++) {
-    if (fMethod==AvgWithThresh||fMethod==Percentile||fMethod==AvgWithoutThresh) {
+    if (fMethod==AvgWithThresh||fMethod==AvgWithThresh3||fMethod==AvgWithThresh2||fMethod==Percentile||fMethod==AvgWithoutThresh) {
       corrCharge.push_back(inputCharge[i]-inputPedestal[i]-bseCorr);
     }
     else {
@@ -49,6 +49,30 @@ double PedestalSub::getCorrection(const std::vector<double> & inputCharge, const
       }
     }
     baseline/=8;
+  }
+  else if (fMethod==AvgWithThresh3) {
+    for (auto i=0; i<10; i++) {
+      if (i==3||i==4||i==5||i==6) continue;
+      if ( (inputCharge[i]-inputPedestal[i])<fThreshold) {
+        baseline+=(inputCharge[i]-inputPedestal[i]);
+      }
+      else {
+        baseline+=fThreshold;
+      }
+    }
+    baseline/=6;
+  }
+  else if (fMethod==AvgWithThresh2) {
+    for (auto i=0; i<10; i++) {
+      if (i==2||i==3||i==4||i==5||i==6||i==7) continue;
+      if ( (inputCharge[i]-inputPedestal[i])<fThreshold) {
+        baseline+=(inputCharge[i]-inputPedestal[i]);
+      }
+      else {
+        baseline+=fThreshold;
+      }
+    }
+    baseline/=4;
   }
   else if (fMethod==AvgWithoutThresh) {
     for (auto i=0; i<10; i++) {
